@@ -4,12 +4,28 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
-    private Animator animator;
+    #region Physics_and_sprite_variables
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    #endregion
 
-    private bool canJump;
+    #region Animation_variables
+    private Animator animator;
+    #endregion
+
+    #region Floor_variables
+    private bool onFloor;
     private int floorLayer;
+    #endregion
+
+    #region Collider_crouch_jump_variables
+    private BoxCollider2D col;
+    private float crouchHeight = 1.25f;
+    private float standHeight = 2.5f;
+    private float moveSpeed;
+    private int jumps;
+    private bool standing = true;
+    #endregion
 
     void Start()
     {
@@ -17,35 +33,44 @@ public class PlayerControl : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         floorLayer = LayerMask.NameToLayer("Floor");
+        col = GetComponent<BoxCollider2D>();
+        moveSpeed = 5;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W) && canJump)
-        {
+        // Jump Control
+        if (Input.GetKeyDown(KeyCode.W) && jumps > 0) {
             animator.SetTrigger("Jump");
-            rb.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
+            jumps -= 1;
+            Jump();
         }
-        if (Input.GetKey(KeyCode.D))
-        {
+        // Crouch Control
+        if (onFloor && (Input.GetKey(KeyCode.S) || !canStand())) {
+            moveSpeed = 4;
+            animator.SetBool("Crouched", true);
+            Crouch();
+        }
+        else {
+            moveSpeed = 5;
+            animator.SetBool("Crouched", false);
+            Stand();
+        }
+        // Left Right Movement Control
+        if (Input.GetKey(KeyCode.D)) {
             animator.SetBool("Moving", true);
-            transform.position = (Vector2)transform.position + new Vector2(5, 0) * Time.deltaTime;
+            transform.position = (Vector2)transform.position + new Vector2(moveSpeed, 0) * Time.deltaTime;
             sr.flipX = false;
         }
-        else if (Input.GetKey(KeyCode.A))
-        {
+        else if (Input.GetKey(KeyCode.A)) {
             animator.SetBool("Moving", true);
-            transform.position = (Vector2)transform.position + new Vector2(-5, 0) * Time.deltaTime;
+            transform.position = (Vector2)transform.position + new Vector2(-moveSpeed, 0) * Time.deltaTime;
             sr.flipX = true;
         } 
-        else if (Input.GetKey(KeyCode.S))
-        {
-            //crouches
-        }
-        else
-        {
+        else {
             animator.SetBool("Moving", false);
         }
+        // Attack/Defend Control
         if (Input.GetKeyDown(KeyCode.J)) {
             animator.SetTrigger("Attack");
             //attacks
@@ -56,12 +81,19 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    #region Checking floor contact
+    #region Floor_contact_methods
     void OnCollisionEnter2D(Collision2D coll) {
 	    if (isFloor(coll.gameObject)) {
-		    canJump = true;
+		    onFloor = true;
+            jumps = 2;
 	    }
 	}
+
+    void OnCollisionStay2D(Collision2D coll) {
+        if (isFloor(coll.gameObject)) {
+		    onFloor = true;
+	    }
+    }
     
     bool isFloor(GameObject obj) {
 		return obj.layer == floorLayer;
@@ -69,8 +101,38 @@ public class PlayerControl : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D coll) {
 		if (isFloor(coll.gameObject)) {
-			canJump = false;
+			onFloor = false;
 		}
 	}
+    #endregion
+
+    #region Crouch_stand_jump_methods
+    private void Crouch() {
+        col.size = new Vector2(col.size.y, crouchHeight);
+        col.offset = new Vector2((float) 0.1, (float) -0.75);
+        standing = false;
+    }
+
+    private void Stand() {
+        col.size = new Vector2(col.size.y, standHeight);
+        col.offset = new Vector2((float) 0.1, (float) -0.1);
+        standing = true;
+    }
+
+    private void Jump() {
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        rb.AddForce(new Vector2(0, 5f), ForceMode2D.Impulse);
+    }
+
+    private bool canStand() {
+        if (standing) {
+            return true;
+        }
+        LayerMask mask = LayerMask.GetMask("Ceiling");
+        if (Physics2D.Raycast(rb.position, rb.transform.up, crouchHeight, mask)) {
+            return false;
+        }
+        return true;
+    }
     #endregion
 }
