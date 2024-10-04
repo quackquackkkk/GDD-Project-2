@@ -20,7 +20,6 @@ public class PlayerFootCollider : MonoBehaviour
             playerControl.onFloor = true;
             playerControl.jumps = 2;
         }
-        print("plz");
     }
 
     void OnCollisionStay2D(Collision2D coll)

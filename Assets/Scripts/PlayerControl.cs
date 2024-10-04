@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -20,8 +21,8 @@ public class PlayerControl : MonoBehaviour
 
     #region Collider_crouch_jump_variables
     private BoxCollider2D col;
-    private float crouchHeight = 1.25f;
-    private float standHeight = 2.5f;
+    private float crouchHeight = 1.05f;
+    private float standHeight = 2.3f;
     private float moveSpeed;
     public int jumps;
     private bool standing = true;
@@ -79,43 +80,28 @@ public class PlayerControl : MonoBehaviour
             animator.SetTrigger("Block");
             //blocks
         }
+
     }
 
-/*#region Floor_contact_methods
+    #region Dying
     void OnCollisionEnter2D(Collision2D coll) {
-	    if (isFloor(coll.gameObject)) {
-		    onFloor = true;
-            jumps = 2;
-	    }
-	}
-
-    void OnCollisionStay2D(Collision2D coll) {
-        if (isFloor(coll.gameObject)) {
-		    onFloor = true;
-	    }
+        print("dead");
+        if (coll.gameObject.CompareTag("Enemy")) {
+            SceneManager.LoadScene("GameOver");
+        }
     }
-    
-    bool isFloor(GameObject obj) {
-		return obj.layer == floorLayer;
-	}
-
-    void OnCollisionExit2D(Collision2D coll) {
-		if (isFloor(coll.gameObject)) {
-			onFloor = false;
-		}
-	}
-    #endregion*/
+    #endregion
 
     #region Crouch_stand_jump_methods
     private void Crouch() {
         col.size = new Vector2(col.size.y, crouchHeight);
-        col.offset = new Vector2((float) 0.1, (float) -0.75);
+        col.offset = new Vector2((float) 0.1, (float) -0.6);
         standing = false;
     }
 
     private void Stand() {
         col.size = new Vector2(col.size.y, standHeight);
-        col.offset = new Vector2((float) 0.1, (float) -0.1);
+        col.offset = new Vector2((float) 0.1, (float) 0.02);
         standing = true;
     }
 
@@ -123,10 +109,12 @@ public class PlayerControl : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(new Vector2(0, 5f), ForceMode2D.Impulse);
     }
+
     public bool isFloor(GameObject obj)
     {
         return obj.layer == floorLayer;
     }
+
     private bool canStand() {
         if (standing) {
             return true;
