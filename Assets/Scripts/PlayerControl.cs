@@ -89,7 +89,7 @@ public class PlayerControl : MonoBehaviour
         if (coll.gameObject.CompareTag("Enemy")) {
             SceneManager.LoadScene("GameOver");
         }
-	}
+    }
     #endregion
 
     #region Crouch_stand_jump_methods

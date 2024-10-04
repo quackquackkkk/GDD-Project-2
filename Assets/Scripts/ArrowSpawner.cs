@@ -19,7 +19,7 @@ public class ArrowSpawner : MonoBehaviour
     #endregion
 
     private int num_Arrows = 15;
-    private int spawn_Time = 5;
+    private int spawn_Time = 2;
     private bool cleared = false;
 
     #region Initialization
@@ -46,9 +46,9 @@ public class ArrowSpawner : MonoBehaviour
 
             // Random spawn position
             Vector3[] spawnPos = {
-                new Vector3(5.0f, -3.0f, 0.0f),
-                new Vector3(5.0f, 0.0f, 0.0f),
-                new Vector3(5.0f, 3.0f, 0.0f)
+                new Vector3(5.0f, -3.8f, 0.0f),
+                new Vector3(5.0f, -2.7f, 0.0f),
+                new Vector3(5.0f, -1.8f, 0.0f)
             };
 
             int randomNumber = Random.Range(0, spawnPos.Length);
