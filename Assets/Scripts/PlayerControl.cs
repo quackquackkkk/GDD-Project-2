@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -20,8 +21,8 @@ public class PlayerControl : MonoBehaviour
 
     #region Collider_crouch_jump_variables
     private BoxCollider2D col;
-    private float crouchHeight = 1.25f;
-    private float standHeight = 2.5f;
+    private float crouchHeight = 1.05f;
+    private float standHeight = 2.3f;
     private float moveSpeed;
     private int jumps;
     private bool standing = true;
@@ -79,15 +80,21 @@ public class PlayerControl : MonoBehaviour
             animator.SetTrigger("Block");
             //blocks
         }
+
     }
 
+<<<<<<< Updated upstream
     #region Floor_contact_methods
+=======
+    #region Dying
+>>>>>>> Stashed changes
     void OnCollisionEnter2D(Collision2D coll) {
-	    if (isFloor(coll.gameObject)) {
-		    onFloor = true;
-            jumps = 2;
-	    }
+        print("dead");
+        if (coll.gameObject.CompareTag("Enemy")) {
+            SceneManager.LoadScene("GameOver");
+        }
 	}
+<<<<<<< Updated upstream
 
     void OnCollisionStay2D(Collision2D coll) {
         if (isFloor(coll.gameObject)) {
@@ -104,18 +111,20 @@ public class PlayerControl : MonoBehaviour
 			onFloor = false;
 		}
 	}
+=======
+>>>>>>> Stashed changes
     #endregion
 
     #region Crouch_stand_jump_methods
     private void Crouch() {
         col.size = new Vector2(col.size.y, crouchHeight);
-        col.offset = new Vector2((float) 0.1, (float) -0.75);
+        col.offset = new Vector2((float) 0.1, (float) -0.6);
         standing = false;
     }
 
     private void Stand() {
         col.size = new Vector2(col.size.y, standHeight);
-        col.offset = new Vector2((float) 0.1, (float) -0.1);
+        col.offset = new Vector2((float) 0.1, (float) 0.02);
         standing = true;
     }
 
@@ -124,6 +133,14 @@ public class PlayerControl : MonoBehaviour
         rb.AddForce(new Vector2(0, 5f), ForceMode2D.Impulse);
     }
 
+<<<<<<< Updated upstream
+=======
+    public bool isFloor(GameObject obj)
+    {
+        return obj.layer == floorLayer;
+    }
+
+>>>>>>> Stashed changes
     private bool canStand() {
         if (standing) {
             return true;
