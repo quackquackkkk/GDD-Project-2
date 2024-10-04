@@ -15,8 +15,8 @@ public class PlayerControl : MonoBehaviour
     #endregion
 
     #region Floor_variables
-    private bool onFloor;
-    private int floorLayer;
+    public bool onFloor;
+    public int floorLayer;
     #endregion
 
     #region Collider_crouch_jump_variables
@@ -24,7 +24,7 @@ public class PlayerControl : MonoBehaviour
     private float crouchHeight = 1.05f;
     private float standHeight = 2.3f;
     private float moveSpeed;
-    private int jumps;
+    public int jumps;
     private bool standing = true;
     #endregion
 
@@ -83,36 +83,13 @@ public class PlayerControl : MonoBehaviour
 
     }
 
-<<<<<<< Updated upstream
-    #region Floor_contact_methods
-=======
     #region Dying
->>>>>>> Stashed changes
     void OnCollisionEnter2D(Collision2D coll) {
         print("dead");
         if (coll.gameObject.CompareTag("Enemy")) {
             SceneManager.LoadScene("GameOver");
         }
 	}
-<<<<<<< Updated upstream
-
-    void OnCollisionStay2D(Collision2D coll) {
-        if (isFloor(coll.gameObject)) {
-		    onFloor = true;
-	    }
-    }
-    
-    bool isFloor(GameObject obj) {
-		return obj.layer == floorLayer;
-	}
-
-    void OnCollisionExit2D(Collision2D coll) {
-		if (isFloor(coll.gameObject)) {
-			onFloor = false;
-		}
-	}
-=======
->>>>>>> Stashed changes
     #endregion
 
     #region Crouch_stand_jump_methods
@@ -133,14 +110,11 @@ public class PlayerControl : MonoBehaviour
         rb.AddForce(new Vector2(0, 5f), ForceMode2D.Impulse);
     }
 
-<<<<<<< Updated upstream
-=======
     public bool isFloor(GameObject obj)
     {
         return obj.layer == floorLayer;
     }
 
->>>>>>> Stashed changes
     private bool canStand() {
         if (standing) {
             return true;
