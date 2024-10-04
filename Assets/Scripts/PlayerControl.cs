@@ -14,8 +14,8 @@ public class PlayerControl : MonoBehaviour
     #endregion
 
     #region Floor_variables
-    private bool onFloor;
-    private int floorLayer;
+    public bool onFloor;
+    public int floorLayer;
     #endregion
 
     #region Collider_crouch_jump_variables
@@ -23,7 +23,7 @@ public class PlayerControl : MonoBehaviour
     private float crouchHeight = 1.25f;
     private float standHeight = 2.5f;
     private float moveSpeed;
-    private int jumps;
+    public int jumps;
     private bool standing = true;
     #endregion
 
@@ -81,7 +81,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    #region Floor_contact_methods
+/*#region Floor_contact_methods
     void OnCollisionEnter2D(Collision2D coll) {
 	    if (isFloor(coll.gameObject)) {
 		    onFloor = true;
@@ -104,7 +104,7 @@ public class PlayerControl : MonoBehaviour
 			onFloor = false;
 		}
 	}
-    #endregion
+    #endregion*/
 
     #region Crouch_stand_jump_methods
     private void Crouch() {
@@ -123,7 +123,10 @@ public class PlayerControl : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(new Vector2(0, 5f), ForceMode2D.Impulse);
     }
-
+    public bool isFloor(GameObject obj)
+    {
+        return obj.layer == floorLayer;
+    }
     private bool canStand() {
         if (standing) {
             return true;
