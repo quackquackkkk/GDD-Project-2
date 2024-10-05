@@ -28,7 +28,7 @@ public class PlayerFootCollider : MonoBehaviour
         {
             playerControl.onFloor = true;
         }
-    }
+    } 
 
     void OnCollisionExit2D(Collision2D coll)
     {
