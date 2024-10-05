@@ -26,6 +26,7 @@ public class PlayerControl : MonoBehaviour
     private float moveSpeed;
     public int jumps;
     private bool standing = true;
+    private bool crouched;
     #endregion
 
     void Start()
@@ -35,26 +36,28 @@ public class PlayerControl : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         floorLayer = LayerMask.NameToLayer("Floor");
         col = GetComponent<BoxCollider2D>();
-        moveSpeed = 5;
+        moveSpeed = 5.0f;
     }
 
     void Update()
     {
         // Jump Control
-        if (Input.GetKeyDown(KeyCode.W) && jumps > 0) {
+        if (Input.GetKeyDown(KeyCode.W) && jumps > 0 && crouched == false) {
             animator.SetTrigger("Jump");
             jumps -= 1;
             Jump();
         }
         // Crouch Control
         if (onFloor && (Input.GetKey(KeyCode.S) || !canStand())) {
-            moveSpeed = 4;
+            moveSpeed = 3.0f;
             animator.SetBool("Crouched", true);
+            crouched = true;
             Crouch();
         }
         else {
-            moveSpeed = 5;
+            moveSpeed = 5.0f;
             animator.SetBool("Crouched", false);
+            crouched = false;
             Stand();
         }
         // Left Right Movement Control
@@ -83,9 +86,8 @@ public class PlayerControl : MonoBehaviour
 
     }
 
-    #region Dying
+    #region Death
     void OnCollisionEnter2D(Collision2D coll) {
-        print("dead");
         if (coll.gameObject.CompareTag("Enemy")) {
             SceneManager.LoadScene("GameOver");
         }
@@ -94,14 +96,14 @@ public class PlayerControl : MonoBehaviour
 
     #region Crouch_stand_jump_methods
     private void Crouch() {
-        col.size = new Vector2(col.size.y, crouchHeight);
-        col.offset = new Vector2((float) 0.1, (float) -0.6);
+        col.size = new Vector2(col.size.x, crouchHeight);
+        col.offset = new Vector2(0.1f, -0.6f);
         standing = false;
     }
 
     private void Stand() {
-        col.size = new Vector2(col.size.y, standHeight);
-        col.offset = new Vector2((float) 0.1, (float) 0.02);
+        col.size = new Vector2(col.size.x, standHeight);
+        col.offset = new Vector2(0.1f, 0.02f);
         standing = true;
     }
 
@@ -119,7 +121,9 @@ public class PlayerControl : MonoBehaviour
         if (standing) {
             return true;
         }
-        LayerMask mask = LayerMask.GetMask("Ceiling");
+        LayerMask ceiling = LayerMask.GetMask("Ceiling");
+        LayerMask wall = LayerMask.GetMask("Wall");
+        LayerMask mask = ceiling | wall;
         if (Physics2D.Raycast(rb.position, rb.transform.up, crouchHeight, mask)) {
             return false;
         }
