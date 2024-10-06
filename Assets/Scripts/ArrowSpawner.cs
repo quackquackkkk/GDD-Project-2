@@ -18,8 +18,8 @@ public class ArrowSpawner : MonoBehaviour
     private Sprite arrowSprite; // Reference to the sprite to assign
     #endregion
 
-    private int num_Arrows = 15;
-    private int spawn_Time = 2;
+    private int num_Arrows = 100;
+    private float spawn_Time = 3f;
     private bool cleared = false;
 
     #region Initialization
@@ -38,7 +38,7 @@ public class ArrowSpawner : MonoBehaviour
     private IEnumerator Spawn()
     {
         int i = 0;
-
+        yield return new WaitForSeconds(10);
         // Spawn while level is not cleared
         while (!cleared && i < num_Arrows)
         {
@@ -46,15 +46,16 @@ public class ArrowSpawner : MonoBehaviour
 
             // Random spawn position
             Vector3[] spawnPos = {
-                new Vector3(5.0f, -3.8f, 0.0f),
-                new Vector3(5.0f, -2.7f, 0.0f),
-                new Vector3(5.0f, -1.8f, 0.0f)
+                new Vector3(15.0f, -2.98f, 0.0f),
+                new Vector3(15.0f, -1.2f, 0.0f),
+                new Vector3(15.0f, 0.55f, 0.0f)
             };
 
             int randomNumber = Random.Range(0, spawnPos.Length);
 
             // Instantiate the arrow at a random position from the spawnPos array
             GameObject arrowInstance = Instantiate(arrowPrefab, spawnPos[randomNumber], Quaternion.identity);
+            i++;
         }
     }
 
