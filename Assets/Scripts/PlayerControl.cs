@@ -89,8 +89,9 @@ public class PlayerControl : MonoBehaviour
     #region Death
     void OnCollisionEnter2D(Collision2D coll) {
         if (coll.gameObject.CompareTag("Enemy")) {
-            print(coll.gameObject);
             SceneManager.LoadScene("GameOver");
+        } else if (coll.gameObject.CompareTag("Gold")) {
+            SceneManager.LoadScene("GameComplete");
         }
     }
     #endregion
