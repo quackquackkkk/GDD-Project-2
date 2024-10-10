@@ -16,6 +16,10 @@ public class SceneSwap : MonoBehaviour
     public void toLevel1() {
         SceneManager.LoadScene("Level_1");
     }
+    public void toLevel2()
+    {
+        SceneManager.LoadScene("Level_2 (Arrows)");
+    }
 
     public void toMainMenu() {
         SceneManager.LoadScene("MainMenu");
