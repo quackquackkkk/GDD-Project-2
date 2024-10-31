@@ -1,4 +1,4 @@
-#The Knight's Fortune
+# The Knight's Fortune
 
 Objective: Embark on a thrilling adventure as a brave knight! Your mission is to navigate through perilous obstacles, dodge traps, and overcome various challenges to reach the fabled pot of gold at the end of each level. Sharpen your reflexes, time your jumps, and think strategically to conquer each obstacle in your path.
 
